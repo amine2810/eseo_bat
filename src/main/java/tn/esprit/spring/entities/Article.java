@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -13,11 +14,21 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Article {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idArticle;
+
     private String titre;
-    private String contenue;
+    private String contenu;
     private String QRCode;
     private Section section;
+
+    @ManyToOne
+    private  Admin admin;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "article")
+    private Set<Multimedia> multimedias;
+
+
 }

@@ -1,5 +1,4 @@
 package tn.esprit.spring.entities;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,13 +12,14 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class Multimedia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idUser;
-    private  String nom;
-    private  String prenom;
-    private  String email;
-    private  String mdp;
+    private Long idMultimedia;
+
+    private String lien;
+
+    @ManyToOne
+    private  Article article;
 
 }
