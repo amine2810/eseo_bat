@@ -79,14 +79,14 @@ public class JoueurController {
                 currentPlayer.setMdp(mdp);
             }
 
-            int score = joueur.getScore_total();
+            int score = joueur.getScoreTotal();
             if (score >= 0 ){
-                currentPlayer.setScore_total(score);
+                currentPlayer.setScoreTotal(score);
             }
 
-            String img_profile = joueur.getImg_profile();
-            if (img_profile != null ){
-                currentPlayer.setImg_profile(img_profile);
+            String imgDeProfil = joueur.getImgDeProfil();
+            if (imgDeProfil != null ){
+                currentPlayer.setImgDeProfil(imgDeProfil);
             }
 
             joueurService.saveJoueur(currentPlayer);

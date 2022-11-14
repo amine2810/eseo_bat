@@ -24,8 +24,8 @@ public class Joueur  {
     private  String prenom;
     private  String email;
     private  String mdp;
-    private int score_total; //score total
-    private String img_profile;
+    private int scoreTotal; //score total
+    private String imgDeProfil;
 
     @OneToMany(mappedBy = "joueur", cascade = CascadeType.ALL)
     private Set<JouerJeu> jouerJeuSet = new HashSet<>();
