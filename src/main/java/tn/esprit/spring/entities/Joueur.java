@@ -24,7 +24,7 @@ public class Joueur  {
     private  String prenom;
     private  String email;
     private  String mdp;
-    private String score; //scroe total
+    private int score_total; //score total
     private String img_profile;
 
     @OneToMany(mappedBy = "joueur", cascade = CascadeType.ALL)
