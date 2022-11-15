@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.spring.entities.Jeu;
 import tn.esprit.spring.entities.Section;
+import tn.esprit.spring.entities.Type_jeu;
 import tn.esprit.spring.serviceInterface.IJeuService;
 
 import java.util.Optional;
@@ -56,18 +57,31 @@ public class JeuController {
         if(j.isPresent()) {
             Jeu currentGame = j.get();
 
+            String name = jeu.getName();
+            if (name != null ){
+                currentGame.setName(name);
+            }
+            String description = jeu.getDescription();
+            if (description != null ){
+                currentGame.setDescription(description);
+            }
+
             int timer = jeu.getTimer();
-            if (timer != 0 ){
+            if (timer > 0 ){
                 currentGame.setTimer(timer);
             }
 
             int score = jeu.getScore();
-            if (score != 0 ){
+            if (score >= 0 ){
                 currentGame.setScore(score);
             }
             Section section = jeu.getSection();
             if (section != null ){
                 currentGame.setSection(section);
+            }
+            Type_jeu typeJeu = jeu.getTypeJeu();
+            if (typeJeu != null ){
+                currentGame.setTypeJeu(typeJeu);
             }
 
             jeuService.saveJeu(currentGame);
