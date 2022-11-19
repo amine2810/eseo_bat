@@ -33,5 +33,33 @@ public class AdminRestController {
 
     @GetMapping("/get-admin-byemail/{email}")
     @ResponseBody
-    Admin getAdminByEmail(@PathVariable("email") String email) { return iAdminService.getAdminByEmail(email); };
+    Admin getAdminByEmail(@PathVariable("email") String email) { return iAdminService.getAdminByEmail(email); }
+
+
+    // http://localhost:8087/SpringMVC/admin/add-admin
+    @PostMapping("/add-admin")
+    @ResponseBody
+    public Admin addAdmin (@RequestBody Admin admin)
+    {
+        Admin a = iAdminService.addAdmin(admin);
+        return a;
+    }
+
+
+    @DeleteMapping("/remove-admin/{admin-id}")
+    @ResponseBody
+    public void removeAdmin(@PathVariable("admin-id") Long adminid) {
+        iAdminService.removeAdmin(adminid);
+    }
+
+
+
+    // http://localhost:8087/SpringMVC/admin/modify-admin
+    @PutMapping("/modify-admin")
+    @ResponseBody
+    public Admin updateAdmin(@RequestBody Admin admin) {
+        return iAdminService.updateAdmin(admin);
+    }
+
+
 }
