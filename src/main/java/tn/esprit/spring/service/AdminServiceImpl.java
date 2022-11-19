@@ -33,7 +33,7 @@ public class AdminServiceImpl  implements IAdminService {
 
     @Override
     public Admin getAdminById(Long id) {
-        return adminRepository.getById(id);
+        return adminRepository.findById(id).orElse(null);
     }
 
     @Override

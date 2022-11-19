@@ -15,5 +15,5 @@ public interface IJoueurService {
     Joueur addJoueur(Joueur joueur);
     Joueur updateJoueur(Joueur joueur);
     List<Joueur> getAllJoueursByScore();
-    List<Joueur> top10Joueurs(Pageable pageable);
+    List<Joueur> top10Joueurs();
 }

@@ -31,7 +31,7 @@ public class JoueurServiceImpl implements IJoueurService  {
 
     @Override
     public Joueur getJoueurById(Long id) {
-        return joueurRepository.getById(id);
+        return joueurRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class JoueurServiceImpl implements IJoueurService  {
     }
 
     @Override
-    public List<Joueur> top10Joueurs(Pageable pageable) {
+    public List<Joueur> top10Joueurs() {
         Pageable topTen = (Pageable) PageRequest.of(0, 10);
         return joueurRepository.top10(topTen);
     }
