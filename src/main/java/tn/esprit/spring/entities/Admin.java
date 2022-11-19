@@ -17,7 +17,6 @@ public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUser;
-
     private  String nom;
     private  String prenom;
     private  String email;
