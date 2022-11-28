@@ -4,101 +4,148 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.spring.entities.Jeu;
 import tn.esprit.spring.entities.Section;
-import tn.esprit.spring.entities.Type_jeu;
+import tn.esprit.spring.entities.TypeJeu;
 import tn.esprit.spring.serviceInterface.IJeuService;
 
+import java.util.List;
 import java.util.Optional;
 
+
 @RestController
+@RequestMapping("/jeu")
 public class JeuController {
 
     @Autowired
     IJeuService jeuService;
 
 
-    /**
-     * Create - Add a new Game
-     * @param jeu An object jeu
-     * @return The game object saved
-     */
-    @PostMapping("/jeu")
-    public Jeu createJeu(@RequestBody Jeu jeu) {
-        return jeuService.saveJeu(jeu);
-    }
-
-    /**
-     *
-     * @return  An Iterable object of Jeu full filled
-     */
-    @GetMapping("/jeux")
-    public Iterable<Jeu> getJeux(){
-        return jeuService.getJeux();
-    }
+    //GET
 
     /**
      * Read - Get one Jeu
      * @param id The id of the jeu
      * @return A Game object full filled
      */
-    @GetMapping("/jeu/{id}")
-    public Jeu getJeu(@PathVariable("id") final long id){
-        Optional<Jeu> jeu = jeuService.getJeu(id);
-        if(jeu.isPresent()){
-            return jeu.get();
-        }
-        else{
-            return null;
-        }
-    }
-
-    @PutMapping("/jeu/{id}")
-    public Jeu updateJeu(@PathVariable("id") final long id, @RequestBody Jeu jeu){
-        Optional<Jeu> j = jeuService.getJeu(id);
-        if(j.isPresent()) {
-            Jeu currentGame = j.get();
-
-            String name = jeu.getName();
-            if (name != null ){
-                currentGame.setName(name);
-            }
-            String description = jeu.getDescription();
-            if (description != null ){
-                currentGame.setDescription(description);
-            }
-
-            int timer = jeu.getTimer();
-            if (timer > 0 ){
-                currentGame.setTimer(timer);
-            }
-
-            int score = jeu.getScore();
-            if (score >= 0 ){
-                currentGame.setScore(score);
-            }
-            Section section = jeu.getSection();
-            if (section != null ){
-                currentGame.setSection(section);
-            }
-            Type_jeu typeJeu = jeu.getTypeJeu();
-            if (typeJeu != null ){
-                currentGame.setTypeJeu(typeJeu);
-            }
-
-            jeuService.saveJeu(currentGame);
-            return currentGame;
-        }
-        else{
-            return null;
-        }
+    @GetMapping("/get-jeu-byid/{id}")
+    @ResponseBody
+    public Jeu getJeuById(@PathVariable("id") final long id){
+        return jeuService.getJeuById(id);
     }
 
     /**
-     * Delete - delete a game
-     * @param id - The id of the game to delete
+     * @param name The name of the jeu
+     * @return List of games with name like the param
      */
-    @DeleteMapping("/jeu/{id}")
-    public void deleteJeu(@PathVariable("id") final long id){
-        jeuService.deleteJeu(id);
+    @GetMapping("/get-jeu-byname/{name}")
+    @ResponseBody
+    public List<Jeu> getJeuByName(@PathVariable("name") String name){
+        return jeuService.getJeuByName(name);
+    }
+
+    /**
+     * @param section The name of the section where the jeu is
+     * @return List of games of a section
+     */
+    @GetMapping("/get-jeu-bysection/{section}")
+    @ResponseBody
+    public List<Jeu> getJeuBySection(@PathVariable("section") Section section){
+        return jeuService.getJeuBySection(section);
+    }
+
+    /**
+     * @param typeJeu the type of the jeu (enumeration)
+     * @return List of games with the same type of jeu.
+     */
+    @GetMapping("/get-jeu-bytypejeu/{typeJeu}")
+    @ResponseBody
+    public List<Jeu> getJeuByTypeJeu(@PathVariable("typeJeu") TypeJeu typeJeu){
+        return jeuService.getJeuByTypeJeu(typeJeu);
+    }
+
+    /**
+     *
+     * @return  A List with all the games sorted by name
+     */
+    @GetMapping("/get-jeux-byname")
+    public List<Jeu> getJeuxByName(){ return jeuService.getAllJeuxByName(); }
+
+    /**
+     *
+     * @return  A List with all the games
+     */
+    @GetMapping("/get-all-jeux")
+    public List<Jeu> getJeux(){ return jeuService.getAllJeux(); }
+
+
+    // POST
+    /**
+     * Create - Add a new Game
+     * @param jeu An object jeu
+     * @return The game object saved
+     */
+    @PostMapping("/add-jeu")
+    @ResponseBody
+    public Jeu addJeu(@RequestBody Jeu jeu) {
+        return jeuService.addJeu(jeu);
+    }
+
+    // PUT
+
+    @PutMapping("/modify-jeu/{id}")
+    @ResponseBody
+    public Jeu updateJeu(@PathVariable("id") final long id, @RequestBody Jeu jeu){
+        Jeu currentPlayer = jeuService.getJeuById(id);
+        if(currentPlayer != null ) {
+
+            String nom = jeu.getName();
+            if (nom != null ){
+                currentPlayer.setName(nom);
+            }
+
+            String description = jeu.getDescription();
+            if (description != null ){
+                currentPlayer.setDescription(description);
+            }
+
+            int scoreMax = jeu.getScore();
+            if (scoreMax >= 0 ){
+                currentPlayer.setScore(scoreMax);
+            }
+
+            int timerMax = jeu.getTimer();
+            if (timerMax >= 0 ){
+                currentPlayer.setTimer(timerMax);
+            }
+            Section section = jeu.getSection();
+            if (section != null ){
+                currentPlayer.setSection(section);
+            }
+
+            TypeJeu typeJeu = jeu.getTypeJeu();
+            if (typeJeu != null ){
+                currentPlayer.setTypeJeu(typeJeu);
+            }
+
+            jeuService.updateJeu(currentPlayer);
+            return currentPlayer;
+        }
+        else{
+            return null;
+        }
+    }
+
+
+
+
+    // DELETE
+    /**
+     * Delete - delete a game
+     * @param joueurId - The id of the game to delete
+     */
+    @DeleteMapping("/remove-jeu/{jeu-id}")
+    @ResponseBody
+    public void deleteJeu(@PathVariable("jeu-id") long joueurId){
+        jeuService.removeJeu(joueurId);
     }
 
 }

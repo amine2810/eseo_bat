@@ -25,7 +25,7 @@ public class Jeu {
     @Enumerated(EnumType.STRING)
     private Section section;
     @Enumerated(EnumType.STRING)
-    private Type_jeu typeJeu;
+    private TypeJeu typeJeu;
 
 
     @OneToMany(mappedBy = "jeu", cascade = CascadeType.ALL)

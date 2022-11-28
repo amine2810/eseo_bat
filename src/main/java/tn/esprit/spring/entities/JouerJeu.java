@@ -16,8 +16,8 @@ public class JouerJeu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int compteur;
-    private int score_j; // score pour cet jeu
+    private int compteur; // nb de fois que le joueur a joué à ce jeu
+    private int scoreJoueur; // score du joueur pour ce jeu
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "joueur_id")
