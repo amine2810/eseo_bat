@@ -3,6 +3,7 @@ package tn.esprit.spring.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import tn.esprit.spring.entities.Admin;
 import tn.esprit.spring.repository.AdminRepository;
@@ -15,6 +16,8 @@ public class AdminServiceImpl  implements IAdminService {
 
     @Autowired
     AdminRepository adminRepository;
+    BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
+
 
 
     @Override
@@ -24,6 +27,7 @@ public class AdminServiceImpl  implements IAdminService {
 
     @Override
     public Admin addAdmin(Admin admin) {
+        admin.setMdp(bCryptPasswordEncoder.encode(admin.getMdp()));
         return adminRepository.save(admin);
     }
 

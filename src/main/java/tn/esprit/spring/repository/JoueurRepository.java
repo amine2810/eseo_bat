@@ -20,7 +20,6 @@ public interface JoueurRepository extends JpaRepository<Joueur, Long> {
 
     @Query(value = "SELECT  j  from  Joueur j order by j.score DESC  ")
     public List<Joueur> getAllJoueursByScore ();
-    @Query(value = "SELECT  j  from  Joueur j order by j.score DESC  ")
-    public List<Joueur> top10 (Pageable pageable);
+
 
 }

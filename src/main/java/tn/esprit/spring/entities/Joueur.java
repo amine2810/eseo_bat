@@ -1,9 +1,8 @@
 package tn.esprit.spring.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.istack.NotNull;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -16,7 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class Joueur  {
+public class Joueur   {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUser;
@@ -24,9 +23,11 @@ public class Joueur  {
     private  String prenom;
     private  String email;
     private  String mdp;
-    private String score; //scroe total
-    private String img_profile;
+    private int score; //scroe total
+    //private String img_profile;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "joueur", cascade = CascadeType.ALL)
     private Set<JouerJeu> jouerJeuSet = new HashSet<>();
+
 }

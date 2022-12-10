@@ -1,9 +1,10 @@
 package tn.esprit.spring.service;
 
+import org.springframework.stereotype.Service;
 import tn.esprit.spring.entities.Admin;
 
 import java.util.List;
-
+@Service
 public interface IAdminService {
     List<Admin> getAllAdmins();
     Admin addAdmin(Admin admin);

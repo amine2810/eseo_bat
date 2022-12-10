@@ -4,12 +4,15 @@ package tn.esprit.spring.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import tn.esprit.spring.entities.Joueur;
 import tn.esprit.spring.repository.AdminRepository;
 import tn.esprit.spring.repository.JoueurRepository;
 
 import java.awt.print.Pageable;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -18,6 +21,7 @@ public class JoueurServiceImpl implements IJoueurService  {
 
     @Autowired
     JoueurRepository joueurRepository;
+    BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
 
     @Override
     public List<Joueur> getAllJoueurs() {
@@ -46,6 +50,7 @@ public class JoueurServiceImpl implements IJoueurService  {
 
     @Override
     public Joueur addJoueur(Joueur joueur) {
+        joueur.setMdp(bCryptPasswordEncoder.encode(joueur.getMdp()));
         return joueurRepository.save(joueur);
     }
 
@@ -61,7 +66,17 @@ public class JoueurServiceImpl implements IJoueurService  {
 
     @Override
     public List<Joueur> top10Joueurs() {
-        Pageable topTen = (Pageable) PageRequest.of(0, 10);
-        return joueurRepository.top10(topTen);
+        List<Joueur> L = getAllJoueursByScore();
+        if(L.size()>=10){
+            int i;
+            List<Joueur> L1 = Collections.emptyList();
+            for (i = 0 ; i<10 ; i++){
+                L1.add(L.get(i));
+            }
+            return  L1 ;
+        }
+        else {
+            return L;
+        }
     }
-}
+    }

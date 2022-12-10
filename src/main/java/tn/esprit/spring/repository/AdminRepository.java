@@ -15,4 +15,6 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 
     @Query(value = "SELECT  ad  from  Admin ad where ad.email  LIKE  ?1 ")
     public Admin getAdminByEmail (String email);
+
+
 }
