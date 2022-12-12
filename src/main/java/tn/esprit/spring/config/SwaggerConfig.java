@@ -14,6 +14,8 @@ import springfox.documentation.spring.web.plugins.Docket;
 import tn.esprit.spring.service.AdminServiceImpl;
 import tn.esprit.spring.service.IAdminService;
 
+import java.util.Properties;
+
 @Configuration
 public class SwaggerConfig {
 	@Bean
@@ -38,10 +40,6 @@ public class SwaggerConfig {
 	@Bean(name="encoder")
 	public static NoOpPasswordEncoder passwordEncoder() {
 		return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
-	}
-	@Bean
-	public JavaMailSender javaMailSender() {
-		return new JavaMailSenderImpl();
 	}
 
 

@@ -1,4 +1,4 @@
-package tn.esprit.spring.service;
+package tn.esprit.spring.sec;
 
 import org.springframework.stereotype.Service;
 
@@ -18,16 +18,6 @@ public class GeneratorService {
                 .toString();
         return (generatedString);
     }
-    public String Codegenerator() {
-        int leftLimit = 48;
-        int rightLimit = 57;
-        int targetStringLength = 6;
-        Random random = new Random();
-        String generatedString = random.ints(leftLimit, rightLimit + 1)
-                .limit(targetStringLength)
-                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                .toString();
-        return (generatedString);
-    }
+
 
 }

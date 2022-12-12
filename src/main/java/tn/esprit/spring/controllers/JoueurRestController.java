@@ -1,6 +1,7 @@
 package tn.esprit.spring.controllers;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,15 +11,13 @@ import org.springframework.web.bind.annotation.*;
 import tn.esprit.spring.Requests.ChangePWDRequest;
 import tn.esprit.spring.Requests.LoginRequest;
 import tn.esprit.spring.Requests.ResetPWDRequest;
-import tn.esprit.spring.entities.Admin;
 import tn.esprit.spring.entities.Joueur;
+import tn.esprit.spring.sec.GeneratorService;
 import tn.esprit.spring.sec.MailSenderService;
-import tn.esprit.spring.service.GeneratorService;
 import tn.esprit.spring.service.IJoueurService;
 
-import java.util.HashSet;
 import java.util.List;
-
+@Slf4j
 @RestController
 @RequestMapping("/joueur")
 public class JoueurRestController {
@@ -27,10 +26,11 @@ public class JoueurRestController {
     @Autowired
     IJoueurService iJoueurService;
     @Autowired
-    MailSenderService mailSender;
+    MailSenderService mailSenderService;
     @Autowired
-    GeneratorService generator;
-   // BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
+    GeneratorService generatorService;
+
+    //CryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
 
 
     @GetMapping("/get-all-joueurs")
@@ -114,15 +114,20 @@ public class JoueurRestController {
 
     @PutMapping("/modify-joueur/{id}")
     @ResponseBody
-    public Joueur updateJoueur(@RequestBody Joueur user , @PathVariable("id") long userid) {
-        Joueur user1 = iJoueurService.getJoueurById(userid);
-        if( user.getEmail().isEmpty())
+    public Joueur updateJoueur(@RequestBody Joueur user , @PathVariable("id") Long userid) {
+        log.info(" test" + user.getEmail());
+        Joueur user1 = getjoueurById(userid);
+        log.info(" test1" + user1.getEmail());
+        if( user.getEmail() == null){
             user.setEmail(user1.getEmail());
-        if( user.getNom().isEmpty())
+            log.info(" test" + user.getEmail());
+        }
+
+        if( user.getNom()== null)
             user.setNom(user1.getNom());
-        if( user.getPrenom().isEmpty())
+        if( user.getPrenom()== null)
             user.setPrenom(user1.getPrenom());
-        if( user.getEmail().isEmpty())
+        if( user.getEmail() == null)
             user.setEmail(user1.getEmail());
 
         user.setIdUser(userid);
@@ -149,37 +154,41 @@ public class JoueurRestController {
     @ResponseBody
     public ResponseEntity<?> updatePWD(@RequestBody ChangePWDRequest changePWDRequest , @PathVariable("id") long userid) {
         Joueur user = iJoueurService.getJoueurById(userid);
-
-        String old_entred=changePWDRequest.getOldPassword();
-        String old_db= user.getMdp();
-        String entred= changePWDRequest.getNewPassword();
-        if (! (entred).matches(old_entred)){
-            return ResponseEntity
-                    .badRequest()
-                    .body(("Error: Ancien mot de passe est incorrect"));}
-        else{
-            user.setMdp((entred));
-            iJoueurService.addJoueur(user);
-            return ResponseEntity.ok().body(("Mot de passe changé avec succés"));
+        if (user != null) {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            String old_entred = (changePWDRequest.getOldPassword());
+            String newPassword = changePWDRequest.getNewPassword();
+            String old_db = user.getMdp();
+            if (!encoder.matches(old_entred, old_db)) {
+                return ResponseEntity
+                        .badRequest()
+                        .body(("Error: Ancien mot de passe est incorrect"));
+            } else {
+                user.setMdp((newPassword));
+                iJoueurService.addJoueur(user);
+                return ResponseEntity.ok().body(("Mot de passe changé avec succés"));
+            }
         }
+        return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/reset_password")
     @CrossOrigin(origins = "*")
-    public ResponseEntity<?> reset_password( @RequestBody ResetPWDRequest resetPWDRequest){
+    public ResponseEntity<?> reset_password( @RequestBody ResetPWDRequest resetPWDRequest) {
         Joueur joueur = iJoueurService.getJoueurByEmail(resetPWDRequest.getUsername());
-        if (joueur != null)
-            return ResponseEntity.notFound().build();
-
-        String pwd=generator.Pwdgenerator();
-        joueur.setMdp(encoder.encode(pwd));
-        mailSender.sendEmail(resetPWDRequest.getUsername(),"Récupérer mot de passe","Bonjour Mme/Mr "+joueur.getNom()
-                +" \n Vous avez oublié votre mot de passe, la connexion est maintenant disponible avec  le nouveau mot de passe ci-dessous . \n"
-                +"\n Vous pouvez le changer pour plus de sécurité. \n"
-                +pwd
-                +"\n \n Merci");
-        iJoueurService.addJoueur(joueur);
-        return ResponseEntity.ok().body(("Mot de passe récupéré avec succés"));
+        if (joueur != null) {
+            String pwd = generatorService.Pwdgenerator();
+            joueur.setMdp(encoder.encode(pwd));
+            mailSenderService.sendEmail(resetPWDRequest.getUsername(), "Récupérer mot de passe", "Bonjour Mme/Mr " + joueur.getNom()
+                    + " \n Vous avez oublié votre mot de passe, la connexion est maintenant disponible avec  le nouveau mot de passe ci-dessous . \n"
+                    + "\n Vous pouvez le changer pour plus de sécurité. \n"
+                    + pwd
+                    + "\n \n Merci");
+            iJoueurService.addJoueur(joueur);
+            System.out.println("user : " + resetPWDRequest.getUsername() + "");
+            return ResponseEntity.ok().body(("Mot de passe récupéré avec succés"));
+        }
+        return ResponseEntity.notFound().build();
     }
 
 }

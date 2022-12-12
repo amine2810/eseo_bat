@@ -12,13 +12,12 @@ import tn.esprit.spring.Requests.ChangePWDRequest;
 import tn.esprit.spring.Requests.LoginRequest;
 import tn.esprit.spring.Requests.ResetPWDRequest;
 import tn.esprit.spring.entities.Admin;
-import tn.esprit.spring.repository.AdminRepository;
+import tn.esprit.spring.entities.Joueur;
+import tn.esprit.spring.sec.GeneratorService;
 import tn.esprit.spring.sec.MailSenderService;
-import tn.esprit.spring.service.GeneratorService;
 import tn.esprit.spring.service.IAdminService;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -30,10 +29,9 @@ public class AdminRestController {
     @Autowired
     PasswordEncoder encoder;
     @Autowired
-    MailSenderService mailSender;
+    MailSenderService mailSenderService;
     @Autowired
-    GeneratorService generator;
-
+    GeneratorService generatorService;
 
     BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
 
@@ -84,13 +82,13 @@ public class AdminRestController {
     @ResponseBody
     public Admin updateAdmin(@RequestBody Admin user , @PathVariable("id") long userid) {
         Admin user1 = iAdminService.getAdminById(userid);
-        if( user.getEmail().isEmpty())
+        if( user.getEmail()== null)
             user.setEmail(user1.getEmail());
-        if( user.getNom().isEmpty())
+        if( user.getNom()== null)
             user.setNom(user1.getNom());
-        if( user.getPrenom().isEmpty())
+        if( user.getPrenom()== null)
             user.setPrenom(user1.getPrenom());
-        if( user.getEmail().isEmpty())
+        if( user.getEmail()== null)
             user.setEmail(user1.getEmail());
 
         user.setIdUser(userid);
@@ -121,6 +119,7 @@ public class AdminRestController {
         if (user != null) {
             String old_entred=changePWDRequest.getOldPassword();
             String old_db= user.getMdp();
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             String entred= changePWDRequest.getNewPassword();
             if (! encoder.matches(old_entred,old_db)){
                 return ResponseEntity
@@ -134,21 +133,23 @@ public class AdminRestController {
         }
         return ResponseEntity.notFound().build();
     }
+
     @PutMapping("/reset_password")
     @CrossOrigin(origins = "*")
-    public ResponseEntity<?> reset_password( @RequestBody ResetPWDRequest resetPWDRequest){
+    public ResponseEntity<?> reset_password( @RequestBody ResetPWDRequest resetPWDRequest) {
         Admin admin = iAdminService.getAdminByEmail(resetPWDRequest.getUsername());
-        if (admin != null)
-            return ResponseEntity.notFound().build();
-
-        String pwd=generator.Pwdgenerator();
-        admin.setMdp(encoder.encode(pwd));
-        mailSender.sendEmail(resetPWDRequest.getUsername(),"Récupérer mot de passe","Bonjour Mme/Mr "+admin.getNom()
-                +" \n Vous avez oublié votre mot de passe, la connexion est maintenant disponible avec  le nouveau mot de passe ci-dessous . \n"
-                +"\n Vous pouvez le changer pour plus de sécurité. \n"
-                +pwd
-                +"\n \n Merci");
-        iAdminService.addAdmin(admin);
-        return ResponseEntity.ok().body(("Mot de passe récupéré avec succés"));
+        if (admin != null) {
+            String pwd = generatorService.Pwdgenerator();
+            admin.setMdp(encoder.encode(pwd));
+            mailSenderService.sendEmail(resetPWDRequest.getUsername(), "Récupérer mot de passe", "Bonjour Mme/Mr " + admin.getNom()
+                    + " \n Vous avez oublié votre mot de passe, la connexion est maintenant disponible avec  le nouveau mot de passe ci-dessous . \n"
+                    + "\n Vous pouvez le changer pour plus de sécurité. \n"
+                    + pwd
+                    + "\n \n Merci");
+            iAdminService.addAdmin(admin);
+            System.out.println("user : " + resetPWDRequest.getUsername() + "");
+            return ResponseEntity.ok().body(("Mot de passe récupéré avec succés"));
+        }
+        return ResponseEntity.notFound().build();
     }
     }
