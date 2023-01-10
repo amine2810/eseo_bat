@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.esprit.spring.entities.Jeu;
+import tn.esprit.spring.entities.Question;
 import tn.esprit.spring.entities.Section;
 import tn.esprit.spring.entities.TypeJeu;
 import tn.esprit.spring.repository.JeuRepository;
@@ -16,6 +17,9 @@ import java.util.List;
 public class JeuService implements IJeuService {
     @Autowired
     private JeuRepository jeuRepository;
+
+    @Autowired
+    private QuestionService questionService;
 
     // GET
     @Override
@@ -36,7 +40,7 @@ public class JeuService implements IJeuService {
     }
     @Override
     public List<Jeu> getAllJeuxByName (){
-        return jeuRepository.getAllJoueursByName();
+        return jeuRepository.getAllJeuxByName();
     }
     @Override
     public List<Jeu> getAllJeux() {

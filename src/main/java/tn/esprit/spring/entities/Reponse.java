@@ -1,4 +1,5 @@
 package tn.esprit.spring.entities;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,8 @@ public class Reponse {
 
     private  String reponse;
     private int vrai ; //   ( 0 : fausse )  , ( 1 : bonne reponse)
+
+    @JsonIgnore
     @ManyToOne
     private  Question question;
 

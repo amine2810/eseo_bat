@@ -31,7 +31,7 @@ public class Jeu {
     @OneToMany(mappedBy = "jeu", cascade = CascadeType.ALL)
     private Set<JouerJeu> jouerJeuSet = new HashSet<>();
 
-    @OneToMany(mappedBy = "jeu", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "jeu", cascade = CascadeType.REMOVE)
     private Set<Question> questions = new HashSet<>();
 
 }

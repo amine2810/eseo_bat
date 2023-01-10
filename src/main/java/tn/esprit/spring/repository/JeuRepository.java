@@ -16,14 +16,14 @@ public interface JeuRepository extends JpaRepository<Jeu,Long> {
     @Query(value = "SELECT  jeu  from  Jeu jeu where jeu.name LIKE  %?1% ")
     public List<Jeu> getJeuByName (String name);
 
-    @Query(value = "SELECT  jeu  from  Jeu jeu where jeu.section LIKE  %?1% ")
+    @Query(value = "SELECT  jeu  from  Jeu jeu where jeu.section LIKE  ?1 ")
     public List<Jeu> getJeuBySection (Section section);
 
-    @Query(value = "SELECT  jeu  from  Jeu jeu where jeu.typeJeu LIKE  %?1% ")
+    @Query(value = "SELECT  jeu  from  Jeu jeu where jeu.typeJeu LIKE  ?1 ")
     public List<Jeu> getJeuByTypeJeu (TypeJeu typeJeu);
 
     @Query(value = "SELECT  jeu  from  Jeu jeu order by jeu.name ASC  ")
-    public List<Jeu> getAllJoueursByName ();
+    public List<Jeu> getAllJeuxByName ();
 
 
 
