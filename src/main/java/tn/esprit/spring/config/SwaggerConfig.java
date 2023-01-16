@@ -1,12 +1,20 @@
 package tn.esprit.spring.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+import tn.esprit.spring.service.AdminServiceImpl;
+import tn.esprit.spring.service.IAdminService;
+
+import java.util.Properties;
 
 @Configuration
 public class SwaggerConfig {
@@ -24,12 +32,21 @@ public class SwaggerConfig {
 				.build().apiInfo(apiInfo());//Informations personnalisées
 				//.build();
 	}
+	@Bean(name="IAdminService")
+	public IAdminService IadminService(){
+		return new AdminServiceImpl();
+	}
+
+	@Bean(name="encoder")
+	public static NoOpPasswordEncoder passwordEncoder() {
+		return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+	}
 
 
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder()
-				.title("Examen Blanc")
-				.description("\"Examen Blanc Swagger configuration\"")
+				.title("Eseo bat")
+				.description("\"Eseo bat Swagger configuration\"")
 				.version("1.1.0")
 				.build();
 	}

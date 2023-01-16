@@ -1,5 +1,6 @@
 package tn.esprit.spring.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,10 +28,10 @@ public class Jeu {
     @Enumerated(EnumType.STRING)
     private TypeJeu typeJeu;
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "jeu", cascade = CascadeType.ALL)
     private Set<JouerJeu> jouerJeuSet = new HashSet<>();
-
+    @JsonIgnore
     @OneToMany(mappedBy = "jeu", cascade = CascadeType.REMOVE)
     private Set<Question> questions = new HashSet<>();
 
