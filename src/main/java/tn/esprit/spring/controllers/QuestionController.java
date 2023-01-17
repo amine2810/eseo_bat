@@ -109,7 +109,6 @@ public class QuestionController {
         if (currentQuestion != null){
             String questionString = newQuestion.getQuestion();
             if (questionString != null) {
-                System.out.println("---------quest------");
                 currentQuestion.setQuestion(questionString);
             }
 
@@ -132,7 +131,7 @@ public class QuestionController {
      * Delete - delete a Question
      * @param questionId - The id of the Question to delete
      */
-    @DeleteMapping("/remove-jeu/{question-id}")
+    @DeleteMapping("/remove-question/{question-id}")
     @ResponseBody
     public void deleteQuestion(@PathVariable("question-id") long questionId){
         questionService.removeQuestion(questionId);
