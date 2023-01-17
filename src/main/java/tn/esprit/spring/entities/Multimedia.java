@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Getter
@@ -18,6 +17,7 @@ public class Multimedia {
     private Long idMultimedia;
 
     private String lien;
+
 
     @ManyToOne
     private  Article article;
