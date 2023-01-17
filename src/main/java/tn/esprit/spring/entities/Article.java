@@ -1,4 +1,5 @@
 package tn.esprit.spring.entities;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,8 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Article {
+
+public class Article implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,13 +24,16 @@ public class Article {
     private String titre;
     private String contenu;
     private String QRCode;
+    @Enumerated(EnumType.STRING)
     private Section section;
 
+    @JsonIgnore
     @ManyToOne
     private  Admin admin;
-
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "article")
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "article",orphanRemoval = true)
     private Set<Multimedia> multimedias;
+
 
 
 }
