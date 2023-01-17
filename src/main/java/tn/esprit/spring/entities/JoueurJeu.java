@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class JouerJeu {
+public class JoueurJeu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

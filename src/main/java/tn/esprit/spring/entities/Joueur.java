@@ -28,5 +28,5 @@ public class Joueur  {
     //private String imgDeProfil;
 
     @OneToMany(mappedBy = "joueur", cascade = CascadeType.ALL)
-    private Set<JouerJeu> jouerJeuSet = new HashSet<>();
+    private Set<JoueurJeu> joueurJeuSet = new HashSet<>();
 }

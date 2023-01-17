@@ -30,7 +30,7 @@ public class Jeu {
 
     @JsonIgnore
     @OneToMany(mappedBy = "jeu", cascade = CascadeType.ALL)
-    private Set<JouerJeu> jouerJeuSet = new HashSet<>();
+    private Set<JoueurJeu> joueurJeuSet = new HashSet<>();
     @JsonIgnore
     @OneToMany(mappedBy = "jeu", cascade = CascadeType.REMOVE)
     private Set<Question> questions = new HashSet<>();
